@@ -162,9 +162,19 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Employee Management API',
-    'DESCRIPTION': 'API para gestión de empleados - Microservicio A',
+    'TITLE': 'Employee & Attendance Management API',
+    'DESCRIPTION': 'API completa para gestión de empleados y asistencias - Sistema de Microservicios',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
-
+    'COMPONENT_SPLIT_REQUEST': True,
+    'TAGS': [
+        {
+            'name': 'Empleados',
+            'description': 'Gestión de empleados - Microservicio A'
+        },
+        {
+            'name': 'Asistencias',
+            'description': 'Gestión de asistencias - Microservicio B'
+        }
+    ],
 }

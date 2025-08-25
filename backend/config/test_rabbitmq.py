@@ -1,4 +1,4 @@
-# test_rabbitmq.py
+# Archivo para testear rabbit Mq
 import pika
 import json
 import time

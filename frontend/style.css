@@ -213,3 +213,9 @@ tr:hover {
     text-decoration: none;
     cursor: pointer;
 }
+.header-icon {
+    width: 32px;
+    height: 32px;
+    vertical-align: middle;
+    margin-right: 10px;
+}

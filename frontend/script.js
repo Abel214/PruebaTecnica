@@ -1,8 +1,7 @@
-// URLs de los Microservicios
-const API_EMPLOYEES = 'http://localhost:8000/api/employees/';  // Microservicio A
-const API_ATTENDANCE = 'http://localhost:8000/'; // Microservicio B
 
-// Mostrar mensajes
+const API_EMPLOYEES = 'http://localhost:8000/api/employees/';
+const API_ATTENDANCE = 'http://localhost:8000/';
+// Mostrar mnesjaes de error
 function showMessage(message, type = 'success', elementId = 'message') {
     const messageDiv = document.getElementById(elementId);
     messageDiv.innerHTML = `
@@ -15,23 +14,18 @@ function showMessage(message, type = 'success', elementId = 'message') {
     }, 5000);
 }
 
-// Función para procesar errores del servidor y mostrarlos de forma amigable
 function processServerErrors(errorData, formPrefix = '') {
     let errorMessages = [];
 
-    // Si es un string, devolverlo directamente
     if (typeof errorData === 'string') {
         return errorData;
     }
 
-    // Si tiene propiedades detail, error o message, usar esas
     if (errorData.detail) return errorData.detail;
     if (errorData.error) return errorData.error;
     if (errorData.message) return errorData.message;
 
-    // Si es un objeto con errores de validación por campo
     if (typeof errorData === 'object') {
-        // Mapear nombres de campos a nombres amigables
         const fieldNames = {
             'first_name': 'Nombre',
             'last_name': 'Apellido',
@@ -43,14 +37,13 @@ function processServerErrors(errorData, formPrefix = '') {
             'employee_id': 'ID del empleado'
         };
 
-        // Limpiar errores anteriores en los campos
         clearFieldErrors(formPrefix);
 
         for (const [field, errors] of Object.entries(errorData)) {
             const fieldName = fieldNames[field] || field;
 
             if (Array.isArray(errors)) {
-                // Mostrar error específico en el campo
+
                 showFieldError(field, errors[0], formPrefix);
                 errorMessages.push(`${fieldName}: ${errors[0]}`);
             } else if (typeof errors === 'string') {
@@ -67,7 +60,6 @@ function processServerErrors(errorData, formPrefix = '') {
     return 'Error desconocido en el servidor';
 }
 
-// Mostrar error específico en un campo del formulario
 function showFieldError(fieldName, errorMessage, formPrefix = '') {
     const fieldId = formPrefix ? `${formPrefix}_${fieldName}` : fieldName;
     const inputElement = document.getElementById(fieldId);
@@ -80,7 +72,6 @@ function showFieldError(fieldName, errorMessage, formPrefix = '') {
     }
 }
 
-// Limpiar errores de todos los campos de un formulario
 function clearFieldErrors(formPrefix = '') {
     const fields = ['first_name', 'last_name', 'email', 'phone_number', 'position', 'salary', 'hire_date', 'employee_id'];
 
@@ -96,33 +87,29 @@ function clearFieldErrors(formPrefix = '') {
     });
 }
 
-// Restricción de entrada de caracteres en tiempo real
+
 function setupInputRestrictions() {
-    // Campos que solo permiten letras y espacios (nombres, apellidos, puesto)
+
     const textOnlyFields = document.querySelectorAll('input[type="text"]');
     textOnlyFields.forEach(field => {
         if (field.id === 'first_name' || field.id === 'last_name' || field.id === 'position' ||
             field.id === 'edit_first_name' || field.id === 'edit_last_name' || field.id === 'edit_position') {
 
-            // Prevenir escritura de números y caracteres especiales
             field.addEventListener('keypress', function(e) {
                 // Permitir letras, espacios, acentos, ñ y teclas de control
                 const allowedChars = /^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]$/;
                 const char = String.fromCharCode(e.which);
 
-                // Permitir teclas de control (backspace, delete, etc.)
                 if (e.which === 0 || e.which === 8 || e.which === 9 || e.which === 13 || e.which === 27) {
                     return true;
                 }
 
-                // Bloquear si no es una letra o espacio permitido
                 if (!allowedChars.test(char)) {
                     e.preventDefault();
                     return false;
                 }
             });
 
-            // Filtrar al pegar contenido
             field.addEventListener('paste', function(e) {
                 e.preventDefault();
                 const pastedText = (e.clipboardData || window.clipboardData).getData('text');
@@ -133,20 +120,15 @@ function setupInputRestrictions() {
         }
     });
 
-    // Campos de teléfono que solo permiten números
     const phoneFields = document.querySelectorAll('input[type="tel"]');
     phoneFields.forEach(field => {
-        // Prevenir escritura de letras y caracteres especiales
+        // Prevenir escritura de letras y caracteres especiales en el teléfono
         field.addEventListener('keypress', function(e) {
-            // Solo permitir números
-            const char = String.fromCharCode(e.which);
 
-            // Permitir teclas de control
+            const char = String.fromCharCode(e.which);
             if (e.which === 0 || e.which === 8 || e.which === 9 || e.which === 13 || e.which === 27) {
                 return true;
             }
-
-            // Bloquear si no es un número
             if (!/^\d$/.test(char)) {
                 e.preventDefault();
                 return false;
@@ -158,8 +140,6 @@ function setupInputRestrictions() {
                 return false;
             }
         });
-
-        // Filtrar al pegar contenido
         field.addEventListener('paste', function(e) {
             e.preventDefault();
             const pastedText = (e.clipboardData || window.clipboardData).getData('text');
@@ -170,9 +150,9 @@ function setupInputRestrictions() {
     });
 }
 
-// Validar campos en tiempo real
+
 function setupFieldValidation() {
-    // Validar campos de solo letras
+
     const textFields = document.querySelectorAll('input[type="text"]');
     textFields.forEach(field => {
         if (field.id === 'first_name' || field.id === 'last_name' || field.id === 'position' ||
@@ -329,7 +309,6 @@ function validateForm(formId) {
 }
 
 // ========== MICROSERVICIO B - ASISTENCIAS ==========
-// Registrar asistencia
 async function registerAttendance(type) {
     const employeeIdInput = document.getElementById('attendanceEmployeeId');
     const employeeId = employeeIdInput.value;
@@ -377,7 +356,6 @@ async function registerAttendance(type) {
     }
 }
 
-// Cargar historial de asistencias
 async function loadAttendanceRecords() {
     try {
         const response = await fetch(`${API_ATTENDANCE}attendance/list/`);
@@ -414,7 +392,6 @@ async function loadAttendanceRecords() {
 }
 
 // ========== MICROSERVICIO A - EMPLEADOS ==========
-// Cargar empleados
 async function loadEmployees() {
     try {
         const response = await fetch(API_EMPLOYEES);
@@ -489,7 +466,7 @@ document.getElementById('employeeForm').addEventListener('submit', async functio
         if (response.ok) {
             showMessage('✅ Empleado creado exitosamente!');
             this.reset();
-            clearFieldErrors(); // Limpiar errores al crear exitosamente
+            clearFieldErrors();
             loadEmployees();
         } else {
             const errorMsg = processServerErrors(data);
@@ -501,7 +478,6 @@ document.getElementById('employeeForm').addEventListener('submit', async functio
     }
 });
 
-// Eliminar empleado
 async function deleteEmployee(id) {
     if (!confirm('¿Estás seguro de eliminar este empleado? Esta acción no se puede deshacer.')) return;
 
@@ -523,7 +499,6 @@ async function deleteEmployee(id) {
     }
 }
 
-// Editar empleado - Abrir modal con datos
 async function editEmployee(id) {
     try {
         const response = await fetch(`${API_EMPLOYEES}${id}/`);
@@ -543,10 +518,8 @@ async function editEmployee(id) {
         document.getElementById('edit_salary').value = employee.salary;
         document.getElementById('edit_hire_date').value = employee.hire_date;
 
-        // Limpiar errores anteriores
         clearFieldErrors('edit');
 
-        // Mostrar el modal
         document.getElementById('editModal').style.display = 'block';
 
     } catch (error) {
@@ -554,7 +527,6 @@ async function editEmployee(id) {
     }
 }
 
-// Guardar cambios del empleado editado
 document.getElementById('editEmployeeForm').addEventListener('submit', async function(e) {
     e.preventDefault();
 
@@ -603,12 +575,12 @@ document.getElementById('editEmployeeForm').addEventListener('submit', async fun
     }
 });
 
-// Cerrar el modal al hacer clic en la X
+
 document.querySelector('.close').addEventListener('click', function() {
     document.getElementById('editModal').style.display = 'none';
 });
 
-// Cerrar el modal al hacer clic fuera de él
+
 window.addEventListener('click', function(event) {
     const modal = document.getElementById('editModal');
     if (event.target === modal) {
@@ -616,10 +588,10 @@ window.addEventListener('click', function(event) {
     }
 });
 
-// Cargar datos al iniciar y configurar validaciones
+
 document.addEventListener('DOMContentLoaded', function() {
     loadEmployees();
     loadAttendanceRecords();
     setupFieldValidation();
-    setupInputRestrictions(); // Nueva función para restricciones de entrada
+    setupInputRestrictions();
 });

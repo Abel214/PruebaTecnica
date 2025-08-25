@@ -1,18 +1,39 @@
-# attendance/views.py
 import json
 import uuid
 import pika
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
+from drf_spectacular.openapi import OpenApiTypes
 from .models import AttendanceRecord
 from microservicioB.serializer import AttendanceSerializer
 
-
 class AttendanceView(APIView):
+
+    @extend_schema(
+        summary="Crear registro de asistencia",
+        description="Crea un nuevo registro de asistencia para un empleado. "
+                    "Primero valida que el empleado exista a través del microservicio A usando RabbitMQ.",
+        request=AttendanceSerializer,
+        responses={
+            201: OpenApiResponse(
+                response=AttendanceSerializer,
+                description="Registro de asistencia creado exitosamente"
+            ),
+            400: OpenApiResponse(
+                description="Datos inválidos o empleado no existe",
+                examples={
+                    'application/json': {
+                        'error': 'Empleado no válido o no existe'
+                    }
+                }
+            ),
+        },
+        tags=['Asistencias']
+    )
     def post(self, request):
-        # Validar empleado via RabbitMQ primero
+
         employee_id = request.data.get('employee_id')
 
         if not self.validate_employee(employee_id):
@@ -21,7 +42,6 @@ class AttendanceView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # Si el empleado es válido, crear el registro
         serializer = AttendanceSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -30,22 +50,20 @@ class AttendanceView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def validate_employee(self, employee_id):
-        """Validar empleado via RabbitMQ (implementación real)"""
+
         try:
             connection = pika.BlockingConnection(
                 pika.ConnectionParameters('localhost')
             )
             channel = connection.channel()
 
-            # Declarar colas
+
             channel.queue_declare(queue='validate_employee_request', durable=True)
             channel.queue_declare(queue='validate_employee_response', durable=True)
 
-            # Configurar consumo de respuesta
+
             result = channel.queue_declare(queue='', exclusive=True)
             callback_queue = result.method.queue
-
-            # Enviar mensaje de validación con correlation_id
             correlation_id = str(uuid.uuid4())
             message = {'employee_id': employee_id}
 
@@ -59,8 +77,6 @@ class AttendanceView(APIView):
                     delivery_mode=2,
                 )
             )
-
-            # Esperar respuesta
             response = None
 
             def on_response(ch, method, props, body):
@@ -90,6 +106,18 @@ class AttendanceView(APIView):
 
 
 class AttendanceListView(APIView):
+
+    @extend_schema(
+        summary="Listar registros de asistencia",
+        description="Obtiene una lista de todos los registros de asistencia en el sistema.",
+        responses={
+            200: OpenApiResponse(
+                response=AttendanceSerializer(many=True),
+                description="Lista de registros de asistencia"
+            ),
+        },
+        tags=['Asistencias']
+    )
     def get(self, request):
         records = AttendanceRecord.objects.all()
         serializer = AttendanceSerializer(records, many=True)

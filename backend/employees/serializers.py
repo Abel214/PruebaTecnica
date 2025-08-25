@@ -27,13 +27,8 @@ class EmployeeSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def validate_email(self, value):
-        """
-        Valida que el email sea único, excluyendo la instancia actual
-        """
-        # Excluir la instancia actual de la validación
         if self.instance and self.instance.email == value:
-            return value  # Es el mismo email, no necesita validación
-
+            return value
         # Verificar si el email ya existe en otros registros
         if Employee.objects.filter(email=value).exists():
             raise serializers.ValidationError("Este email ya está registrado")
@@ -41,7 +36,6 @@ class EmployeeSerializer(serializers.ModelSerializer):
         return value
 
     def validate_salary(self, value):
-        """Validar que el salario sea positivo"""
         if value < 0:
             raise serializers.ValidationError("El salario no puede ser negativo")
         return value

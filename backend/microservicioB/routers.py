@@ -1,4 +1,4 @@
-# microservicioB/database_routers.py
+
 class MicroservicioBRouter:
     def db_for_read(self, model, **hints):
         if model._meta.app_label == 'microservicioB':

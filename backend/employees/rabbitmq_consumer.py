@@ -6,7 +6,6 @@ import sys
 import django
 import pika
 
-# Configurar Django correctamente
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 django.setup()
@@ -20,7 +19,6 @@ class SimpleEmployeeValidator:
         self.channel = None
 
     def connect(self, max_retries=5, retry_interval=5):
-        """Conectar a RabbitMQ con reintentos"""
         for attempt in range(max_retries):
             try:
                 print(f"🔌 Intentando conectar a RabbitMQ (intento {attempt + 1}/{max_retries})...")
@@ -35,7 +33,6 @@ class SimpleEmployeeValidator:
                 )
                 self.channel = self.connection.channel()
 
-                # Declarar colas CON durable=True (para que coincida con la configuración existente)
                 self.channel.queue_declare(queue='validate_employee_request', durable=True)
                 self.channel.queue_declare(queue='validate_employee_response', durable=True)
 
@@ -53,15 +50,14 @@ class SimpleEmployeeValidator:
         return False
 
     def validate_callback(self, ch, method, properties, body):
-        """Callback para validar empleados"""
+
         try:
-            # Parsear mensaje
+
             message = json.loads(body)
             employee_id = message.get('employee_id')
 
             print(f"📨 Validando empleado ID: {employee_id}")
 
-            # Validar existencia del empleado
             try:
                 exists = Employee.objects.filter(id=employee_id).exists()
                 response = {
@@ -77,19 +73,18 @@ class SimpleEmployeeValidator:
                     'message': 'Error interno del servidor'
                 }
 
-            # Enviar respuesta
+
             self.channel.basic_publish(
                 exchange='',
                 routing_key='validate_employee_response',
                 body=json.dumps(response),
                 properties=pika.BasicProperties(
-                    delivery_mode=2,  # Hacer el mensaje persistente
+                    delivery_mode=2,
                 )
             )
 
             print(f"✅ Respuesta enviada: {response}")
 
-            # Confirmar procesamiento
             ch.basic_ack(delivery_tag=method.delivery_tag)
 
         except json.JSONDecodeError:
@@ -100,7 +95,7 @@ class SimpleEmployeeValidator:
             ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
 
     def start_consuming(self):
-        """Iniciar consumo de mensajes"""
+
         if not self.connect():
             return
 
@@ -129,7 +124,6 @@ class SimpleEmployeeValidator:
 
 
 def start_simple_consumer():
-    """Iniciar consumidor simple"""
     print("=" * 50)
     print("🚀 INICIANDO CONSUMIDOR RABBITMQ")
     print("=" * 50)

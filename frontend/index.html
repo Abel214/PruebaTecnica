@@ -8,9 +8,8 @@
 </head>
 <body>
     <div class="container">
-        <h1>🏢 Sistema de Gestión de Empleados y Asistencias</h1>
+        <h1><img src="https://i.postimg.cc/nVmvkvMn/company-workplace-building-office-icon-262568.png" alt="Empresa" class="header-icon"> Sistema de Gestión de Empleados y Asistencias</h1>
 
-        <!-- Modal para editar empleado (oculto inicialmente) -->
         <div id="editModal" class="modal">
             <div class="modal-content">
                 <span class="close">&times;</span>
@@ -58,9 +57,8 @@
             </div>
         </div>
 
-        <!-- Sección de Registro de Asistencias (Microservicio B) -->
         <div class="attendance-section">
-            <h2>⏰ Registro de Asistencias</h2>
+            <h2><img src="https://i.postimg.cc/7ZP49nHc/calendar-clock-schedule-icon-icons-com-51085.png" alt="Empresa" class="header-icon"> Registro de Asistencias</h2>
             <div id="attendanceMessage"></div>
 
             <div class="form-group">
@@ -78,9 +76,8 @@
                 </button>
             </div>
 
-            <!-- Lista de asistencias -->
             <div class="attendance-history">
-                <h3>📋 Historial de Asistencias</h3>
+                <h3><img src="https://i.postimg.cc/WzSrk7bV/agreement-contract-deal-arrangement-understanding-icon-262930.png" alt="Empresa" class="header-icon"> Historial de Asistencias</h3>
                 <button onclick="loadAttendanceRecords()" style="margin-bottom: 20px;">🔄 Actualizar Historial</button>
                 <table id="attendanceTable">
                     <thead>
@@ -93,15 +90,14 @@
                         </tr>
                     </thead>
                     <tbody id="attendanceBody">
-                        <!-- Las asistencias se cargarán aquí -->
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- Formulario para crear empleado (Microservicio A) -->
+
         <div class="form-section">
-            <h2>➕ Crear Nuevo Empleado</h2>
+            <h2><img src="https://i.postimg.cc/Nf3GxH9v/create-group-button-icon-icons-com-72792.png" alt="Empresa" class="header-icon"> Crear Nuevo Empleado</h2>
             <div id="message"></div>
 
             <form id="employeeForm">
@@ -151,9 +147,8 @@
             </form>
         </div>
 
-        <!-- Lista de empleados (Microservicio A) -->
         <div class="list-section">
-            <h2>👥 Lista de Empleados</h2>
+            <h2><img src="https://i.postimg.cc/7h7PvHdW/professional-executive-entrepreneur-business-man-icon-262974.png" alt="Empresa" class="header-icon"> Lista de Empleados</h2>
             <button onclick="loadEmployees()" style="margin-bottom: 20px;">🔄 Actualizar Lista</button>
             <table id="employeesTable">
                 <thead>
@@ -168,7 +163,6 @@
                     </tr>
                 </thead>
                 <tbody id="employeesBody">
-                    <!-- Los empleados se cargarán aquí -->
                 </tbody>
             </table>
         </div>
