@@ -1,5 +1,5 @@
 # PruebaTecnica
-Prueba técnica empresa PENTVIEW - Sistema de Gestión de Empleados y Asistencias (Ejercicio 1)
+Prueba técnica empresa PENTVIEW - Sistema de Gestión de Empleados y Asistencias
 Imágenes del programa:
    ![Alt text](https://i.postimg.cc/vT1g4wjr/Screenshot-2025-08-25-140716.png)
    ![Alt text](https://i.postimg.cc/C5FZ4fz4/Screenshot-2025-08-25-141610.png)
