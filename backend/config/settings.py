@@ -11,7 +11,9 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -39,9 +41,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'employees',
+    'microservicioB',
+    'django_celery_results',
+    'corsheaders',
+    'drf_spectacular',
+
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -74,17 +82,19 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# Python
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Microservicio1',
-        'USER': 'microservio1_user',
-        'PASSWORD': 'micro1',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    },
+    'microservicioB_db': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'microservicioB_db.sqlite3',
     }
-}
 
+}
+DATABASE_ROUTERS = ['microservicioB.routers.MicroservicioBRouter']
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
@@ -125,3 +135,46 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Configuración de RabbitMQ
+RABBITMQ = {
+    'HOST': os.getenv('RABBITMQ_HOST', 'localhost'),
+    'PORT': os.getenv('RABBITMQ_PORT', 5672),
+    'USER': os.getenv('RABBITMQ_USER', 'guest'),
+    'PASSWORD': os.getenv('RABBITMQ_PASSWORD', 'guest'),
+}
+
+# Configuración de Celery para RabbitMQ
+CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8001",
+    "http://127.0.0.1:8001",
+]
+#Swagger settings
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Employee & Attendance Management API',
+    'DESCRIPTION': 'API completa para gestión de empleados y asistencias - Sistema de Microservicios',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'COMPONENT_SPLIT_REQUEST': True,
+    'TAGS': [
+        {
+            'name': 'Empleados',
+            'description': 'Gestión de empleados - Microservicio A'
+        },
+        {
+            'name': 'Asistencias',
+            'description': 'Gestión de asistencias - Microservicio B'
+        }
+    ],
+}

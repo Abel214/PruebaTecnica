@@ -1,0 +1,491 @@
+openapi: 3.0.3
+info:
+  title: Employee Management API
+  version: 1.0.0
+  description: API para gestión de empleados - Microservicio A
+paths:
+  /api/employees/:
+    get:
+      operationId: api_employees_list
+      description: Obtiene una lista de todos los empleados registrados en el sistema
+      summary: Listar todos los empleados
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Employee'
+              examples:
+                EjemploDeEmpleado:
+                  value:
+                  - id: 1
+                    first_name: Juan
+                    last_name: Pérez
+                    email: juan@empresa.com
+                    phone_number: '+1234567890'
+                    position: Desarrollador
+                    salary: '50000.00'
+                    hire_date: '2024-01-15'
+                  summary: Ejemplo de empleado
+          description: ''
+    post:
+      operationId: api_employees_create
+      description: Crea un nuevo empleado con los datos proporcionados
+      summary: Crear nuevo empleado
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+            examples:
+              EjemploDeCreación:
+                value:
+                  first_name: Juan
+                  last_name: Pérez
+                  email: juan@empresa.com
+                  phone_number: '+1234567890'
+                  position: Desarrollador
+                  salary: '50000.00'
+                  hire_date: '2024-01-15'
+                summary: Ejemplo de creación
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Employee'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Employee'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/employees/{id}/:
+    get:
+      operationId: api_employees_retrieve
+      description: Obtiene los detalles de un empleado por su ID
+      summary: Obtener empleado específico
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: pk
+        schema:
+          type: integer
+        description: ID del empleado
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+              examples:
+                EjemploDeEmpleado:
+                  value:
+                    id: 1
+                    first_name: Juan
+                    last_name: Pérez
+                    email: juan@empresa.com
+                    phone_number: '+1234567890'
+                    position: Desarrollador
+                    salary: '50000.00'
+                    hire_date: '2024-01-15'
+                  summary: Ejemplo de empleado
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+    put:
+      operationId: api_employees_update
+      description: Actualiza los datos de un empleado existente
+      summary: Actualizar empleado
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Employee'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Employee'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+              examples:
+                EjemploDeEmpleado:
+                  value:
+                    id: 1
+                    first_name: Juan
+                    last_name: Pérez
+                    email: juan@empresa.com
+                    phone_number: '+1234567890'
+                    position: Desarrollador
+                    salary: '50000.00'
+                    hire_date: '2024-01-15'
+                  summary: Ejemplo de empleado
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+    delete:
+      operationId: api_employees_destroy
+      description: Elimina un empleado del sistema
+      summary: Eliminar empleado
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: pk
+        schema:
+          type: integer
+        description: ID del empleado
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+        '404':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /employees/:
+    get:
+      operationId: employees_list
+      description: Obtiene una lista de todos los empleados registrados en el sistema
+      summary: Listar todos los empleados
+      tags:
+      - employees
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Employee'
+              examples:
+                EjemploDeEmpleado:
+                  value:
+                  - id: 1
+                    first_name: Juan
+                    last_name: Pérez
+                    email: juan@empresa.com
+                    phone_number: '+1234567890'
+                    position: Desarrollador
+                    salary: '50000.00'
+                    hire_date: '2024-01-15'
+                  summary: Ejemplo de empleado
+          description: ''
+    post:
+      operationId: employees_create
+      description: Crea un nuevo empleado con los datos proporcionados
+      summary: Crear nuevo empleado
+      tags:
+      - employees
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+            examples:
+              EjemploDeCreación:
+                value:
+                  first_name: Juan
+                  last_name: Pérez
+                  email: juan@empresa.com
+                  phone_number: '+1234567890'
+                  position: Desarrollador
+                  salary: '50000.00'
+                  hire_date: '2024-01-15'
+                summary: Ejemplo de creación
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Employee'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Employee'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /employees/{id}/:
+    get:
+      operationId: employees_retrieve
+      description: Obtiene los detalles de un empleado por su ID
+      summary: Obtener empleado específico
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: pk
+        schema:
+          type: integer
+        description: ID del empleado
+        required: true
+      tags:
+      - employees
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+              examples:
+                EjemploDeEmpleado:
+                  value:
+                    id: 1
+                    first_name: Juan
+                    last_name: Pérez
+                    email: juan@empresa.com
+                    phone_number: '+1234567890'
+                    position: Desarrollador
+                    salary: '50000.00'
+                    hire_date: '2024-01-15'
+                  summary: Ejemplo de empleado
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+    put:
+      operationId: employees_update
+      description: Actualiza los datos de un empleado existente
+      summary: Actualizar empleado
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - employees
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Employee'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Employee'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+              examples:
+                EjemploDeEmpleado:
+                  value:
+                    id: 1
+                    first_name: Juan
+                    last_name: Pérez
+                    email: juan@empresa.com
+                    phone_number: '+1234567890'
+                    position: Desarrollador
+                    salary: '50000.00'
+                    hire_date: '2024-01-15'
+                  summary: Ejemplo de empleado
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+    delete:
+      operationId: employees_destroy
+      description: Elimina un empleado del sistema
+      summary: Eliminar empleado
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: pk
+        schema:
+          type: integer
+        description: ID del empleado
+        required: true
+      tags:
+      - employees
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+        '404':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+components:
+  schemas:
+    Employee:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        first_name:
+          type: string
+          maxLength: 100
+        last_name:
+          type: string
+          maxLength: 100
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        phone_number:
+          type: string
+          nullable: true
+          maxLength: 15
+        position:
+          type: string
+          maxLength: 100
+        salary:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        hire_date:
+          type: string
+          format: date
+      required:
+      - email
+      - id
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid

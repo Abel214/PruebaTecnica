@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión de Empleados y Asistencias</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1><img src="https://i.postimg.cc/nVmvkvMn/company-workplace-building-office-icon-262568.png" alt="Empresa" class="header-icon"> Sistema de Gestión de Empleados y Asistencias</h1>
+
+        <div id="editModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>✏️ Editar Empleado</h2>
+                <div id="editMessage"></div>
+                <form id="editEmployeeForm">
+                    <input type="hidden" id="edit_id" name="id">
+                    <div class="form-group">
+                        <label for="edit_first_name">Nombre:</label>
+                        <input type="text" id="edit_first_name" name="first_name" required>
+                        <div class="error-message" id="edit_first_name_error"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_last_name">Apellido:</label>
+                        <input type="text" id="edit_last_name" name="last_name" required>
+                        <div class="error-message" id="edit_last_name_error"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_email">Email:</label>
+                        <input type="email" id="edit_email" name="email" required>
+                        <div class="error-message" id="edit_email_error"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_phone_number">Teléfono:</label>
+                        <input type="tel" id="edit_phone_number" name="phone_number" maxlength="10">
+                        <div class="error-message" id="edit_phone_error"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_position">Puesto:</label>
+                        <input type="text" id="edit_position" name="position" required>
+                        <div class="error-message" id="edit_position_error"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_salary">Salario:</label>
+                        <input type="number" id="edit_salary" name="salary" step="0.01" required>
+                        <div class="error-message" id="edit_salary_error"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_hire_date">Fecha de Contratación:</label>
+                        <input type="date" id="edit_hire_date" name="hire_date" required>
+                        <div class="error-message" id="edit_hire_date_error"></div>
+                    </div>
+                    <button type="submit">💾 Guardar Cambios</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="attendance-section">
+            <h2><img src="https://i.postimg.cc/7ZP49nHc/calendar-clock-schedule-icon-icons-com-51085.png" alt="Empresa" class="header-icon"> Registro de Asistencias</h2>
+            <div id="attendanceMessage"></div>
+
+            <div class="form-group">
+                <label for="attendanceEmployeeId">ID del Empleado:</label>
+                <input type="number" id="attendanceEmployeeId" name="employee_id" required min="1">
+                <div class="error-message" id="attendance_employee_error"></div>
+            </div>
+
+            <div class="attendance-buttons">
+                <button class="btn-attendance" onclick="registerAttendance('entry')">
+                    ✅ Registrar Entrada
+                </button>
+                <button class="btn-exit" onclick="registerAttendance('exit')">
+                    🚪 Registrar Salida
+                </button>
+            </div>
+
+            <div class="attendance-history">
+                <h3><img src="https://i.postimg.cc/WzSrk7bV/agreement-contract-deal-arrangement-understanding-icon-262930.png" alt="Empresa" class="header-icon"> Historial de Asistencias</h3>
+                <button onclick="loadAttendanceRecords()" style="margin-bottom: 20px;">🔄 Actualizar Historial</button>
+                <table id="attendanceTable">
+                    <thead>
+                        <tr>
+                            <th>Empleado ID</th>
+                            <th>Tipo</th>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Registrado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attendanceBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="form-section">
+            <h2><img src="https://i.postimg.cc/Nf3GxH9v/create-group-button-icon-icons-com-72792.png" alt="Empresa" class="header-icon"> Crear Nuevo Empleado</h2>
+            <div id="message"></div>
+
+            <form id="employeeForm">
+                <div class="form-group">
+                    <label for="first_name">Nombre:</label>
+                    <input type="text" id="first_name" name="first_name" required>
+                    <div class="error-message" id="first_name_error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="last_name">Apellido:</label>
+                    <input type="text" id="last_name" name="last_name" required>
+                    <div class="error-message" id="last_name_error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                    <div class="error-message" id="email_error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone_number">Teléfono:</label>
+                    <input type="tel" id="phone_number" name="phone_number" maxlength="10">
+                    <div class="error-message" id="phone_error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="position">Puesto:</label>
+                    <input type="text" id="position" name="position" required>
+                    <div class="error-message" id="position_error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="salary">Salario:</label>
+                    <input type="number" id="salary" name="salary" step="0.01" required>
+                    <div class="error-message" id="salary_error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="hire_date">Fecha de Contratación:</label>
+                    <input type="date" id="hire_date" name="hire_date" required>
+                    <div class="error-message" id="hire_date_error"></div>
+                </div>
+
+                <button type="submit">💾 Guardar Empleado</button>
+            </form>
+        </div>
+
+        <div class="list-section">
+            <h2><img src="https://i.postimg.cc/7h7PvHdW/professional-executive-entrepreneur-business-man-icon-262974.png" alt="Empresa" class="header-icon"> Lista de Empleados</h2>
+            <button onclick="loadEmployees()" style="margin-bottom: 20px;">🔄 Actualizar Lista</button>
+            <table id="employeesTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Puesto</th>
+                        <th>Salario</th>
+                        <th>Fecha Contratación</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="employeesBody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
