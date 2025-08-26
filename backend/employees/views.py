@@ -1,12 +1,18 @@
 # employees/views.py
+import os
+
+from django.conf import settings
+from django.http import FileResponse
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
 from drf_spectacular.types import OpenApiTypes
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+
 from employees.models import Employee
 from employees.serializers import EmployeeSerializer
+from employees.swagger_to_pdf import convert_swagger_to_pdf
 
 
 class EmployeeListView(APIView):
@@ -120,3 +126,31 @@ class EmployeeDetailView(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Employee.DoesNotExist:
             return Response({"error": "Employee not found"}, status=status.HTTP_404_NOT_FOUND)
+
+
+class SwaggerPDFView(APIView):
+    """
+    Vista para generar y descargar documentación PDF de la API
+    """
+
+    def get(self, request):
+        # Ruta al archivo Swagger generado por drf-spectacular
+        swagger_file = os.path.join(settings.BASE_DIR, 'schema.yml')
+        output_file = os.path.join(settings.MEDIA_ROOT, 'api_documentation.pdf')
+
+        # Generar PDF
+        success = convert_swagger_to_pdf(swagger_file, output_file)
+
+        if success:
+            # Servir el archivo PDF
+            response = FileResponse(
+                open(output_file, 'rb'),
+                content_type='application/pdf'
+            )
+            response['Content-Disposition'] = 'attachment; filename="api_documentation.pdf"'
+            return response
+        else:
+            return Response(
+                {"error": "Error generando documentación PDF"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

@@ -13,3 +13,6 @@ psycopg2-binary==2.9.9
 # CORS para frontend
 django-cors-headers==4.3.1
 python-decouple==3.8
+# Generación PDF
+xhtml2pdf==0.2.11
+reportlab==4.0.7
