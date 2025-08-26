@@ -4,7 +4,7 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
-from employees.views import EmployeeListView, EmployeeDetailView
+from employees.views import EmployeeListView, EmployeeDetailView, SwaggerPDFView
 from microservicioB.views import AttendanceView, AttendanceListView
 
 schema_view = get_schema_view(
@@ -34,6 +34,9 @@ urlpatterns = [
 
     #URLS MICROSERVICIO B
     path('attendance/', AttendanceView.as_view(), name='attendance-create'),
-    path('attendance/list/', AttendanceListView.as_view(), name='attendance-list')
+    path('attendance/list/', AttendanceListView.as_view(), name='attendance-list'),
+
+    #URLS PARA DESCARGAR SWAGGER EN PDF
+    path('api/docs/pdf/', SwaggerPDFView.as_view(), name='api-docs-pdf'),
 
 ]
