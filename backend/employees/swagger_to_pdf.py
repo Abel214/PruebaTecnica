@@ -17,7 +17,7 @@ class SwaggerToPDFConverter:
         self.spec = None
 
     def load_swagger_spec(self):
-        """Carga la especificación Swagger desde JSON o YAML"""
+
         try:
             with open(self.swagger_file_path, 'r', encoding='utf-8') as f:
                 if self.swagger_file_path.endswith('.json'):
@@ -30,7 +30,7 @@ class SwaggerToPDFConverter:
             return False
 
     def generate_html_content(self):
-        """Genera contenido HTML a partir de la especificación Swagger"""
+
         if not self.spec:
             return None
 
@@ -62,7 +62,7 @@ class SwaggerToPDFConverter:
         return html_content
 
     def get_css_styles(self):
-        """Retorna los estilos CSS para el PDF"""
+
         return """
         body { 
             font-family: Helvetica, Arial, sans-serif;
@@ -218,20 +218,13 @@ class SwaggerToPDFConverter:
             return None
 
 
-# Función simplificada
 def convert_swagger_to_pdf(swagger_file, output_file=None):
-    """
-    Convierte Swagger a PDF usando xhtml2pdf
-    """
+
     converter = SwaggerToPDFConverter(swagger_file)
     return converter.convert_to_pdf(output_file)
 
 
-# Vista Django actualizada
 class SwaggerPDFView(APIView):
-    """
-    Vista para generar y descargar documentación PDF
-    """
 
     def get(self, request):
         swagger_file = os.path.join(settings.BASE_DIR, 'schema.yml')
