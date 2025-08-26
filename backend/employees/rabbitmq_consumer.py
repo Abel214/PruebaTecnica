@@ -125,7 +125,7 @@ class SimpleEmployeeValidator:
 
 def start_simple_consumer():
     print("=" * 50)
-    print("🚀 INICIANDO CONSUMIDOR RABBITMQ")
+    print(" INICIANDO CONSUMIDOR RABBITMQ")
     print("=" * 50)
 
     consumer = SimpleEmployeeValidator()
