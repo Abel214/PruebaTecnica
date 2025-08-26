@@ -102,13 +102,40 @@ PruebaTecnica/
 ### Orden recomendado de ejecución:
 
 1. **Iniciar RabbitMQ** (debe estar corriendo antes que el backend)
-2. **Iniciar Backend:**
+
+   ```bash
+   rabbitmq-service start
+    ```
+    **Habilitar la Interfaz Web de Administración** (Para observar con mas detalle la comunicación del servicio con la aplicación)
+
+    ```bash
+       rabbitmq-plugins enable rabbitmq_management
+    
+    # Reiniciar el servicio para aplicar los cambios
+      rabbitmq-service restart
+
+   # En sistemas Linux (alternativa)
+      sudo systemctl restart rabbitmq-server
+    ```
+   La URL de la interfaz web y las credenciales:http://localhost:15672
+
+   Usuario: guest
+
+   Contraseña: guest
+
+   **Verificar la Comunicación Asíncrona** (Para inicializar la comunicación asíncrona y verificar que RabbitMQ está funcionando correctamente)
+   ```bash
+   #Ejecutar este comando en el backend
+   python employees/rabbitmq_consumer.py
+   ```
+   
+3. **Iniciar Backend:**
    ```bash
    cd backend
    .venv/Scripts/activate
    python manage.py runserver
    ```
-3. **Iniciar Frontend:**
+4. **Iniciar Frontend:**
    ```bash
    python main.py
    ```
